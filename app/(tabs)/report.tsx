@@ -1,9 +1,9 @@
 import { StyleSheet, View, Text } from 'react-native';
 
-export default function HomeScreen() {
+export default function ReportScreen() {
    return (
       <View style={styles.container}>
-         <Text>Tela principal</Text>
+         <Text>Tela de relatório</Text>
       </View >
    );
 }
