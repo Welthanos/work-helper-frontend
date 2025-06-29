@@ -58,7 +58,7 @@ export default function TabLayout() {
             options={{
                title: 'Sair',
                tabBarIcon: ({ color }) => (
-                  <MaterialIcons size={25} name='logout' color={color} style={{ paddingTop: 3, paddingStart: 2 }} />
+                  <MaterialIcons size={24} name='logout' color={color} style={{ paddingTop: 3, paddingStart: 2 }} />
                ),
             }}
             listeners={{
