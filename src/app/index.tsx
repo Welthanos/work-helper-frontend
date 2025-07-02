@@ -20,7 +20,6 @@ export default function LoginScreen() {
       else Alert.alert('Falha no Login', 'E-mail ou senha incorretos.');
 
       setLoading(false);
-      router.push('/(tabs)');
    }
 
    function handleNavigateToRegister() {
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
       borderTopLeftRadius: 30,
       borderTopRightRadius: 30,
       paddingHorizontal: 30,
-      paddingTop: 160,
+      paddingTop: 150,
       position: 'relative',
    },
    logoWrapper: {
@@ -133,7 +132,7 @@ const styles = StyleSheet.create({
       borderRadius: 30,
       alignItems: 'center',
       marginBottom: 20,
-      marginTop: 15,
+      marginTop: 10,
    },
    loginText: {
       color: Colors.white,

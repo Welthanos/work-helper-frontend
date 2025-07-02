@@ -23,7 +23,7 @@ export default function TabLayout() {
                backgroundColor: Colors.white,
             },
             headerRight: () => (
-               <TouchableOpacity onPress={() => router.push('/')} style={{ marginRight: 15 }} activeOpacity={0.5}>
+               <TouchableOpacity onPress={() => router.push('/')} style={{ marginRight: 20 }} activeOpacity={0.5}>
                   <MaterialIcons size={24} name={'info-outline'} color={Colors.darkBlue} />
                </TouchableOpacity>
             ),
@@ -35,10 +35,10 @@ export default function TabLayout() {
             options={{
                title: 'Início',
                headerTitle: () => (
-                  <Image source={require('@/src/assets/images/logo-text.png')} style={{ width: 150, resizeMode: 'contain' }} />
+                  <Image source={require('@/src/assets/images/logo-text.png')} style={{ width: 140, marginLeft: 4, resizeMode: 'contain' }} />
                ),
                tabBarIcon: ({ color }) => (
-                  <MaterialIcons size={24} name='home' color={color} />
+                  <MaterialIcons size={26} name='home' color={color} style={{ paddingTop: 3 }} />
                ),
             }}
          />

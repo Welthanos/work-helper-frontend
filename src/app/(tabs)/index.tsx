@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const sliderTexts = [
-   'Agrupe as avaliações dos trabalhadores por modalidade do trabalho e período de pesquisa.',
+   'As avaliações dos trabalhadores são agrupadas pela modalidade do trabalho e período de pesquisa.',
    'Identifique padrões de risco no ambiente de trabalho para melhores ações preventivas.',
 ];
 
@@ -33,13 +33,16 @@ export default function HomeScreen() {
       <View style={styles.container}>
          <View style={styles.headerCard}>
             <Image source={require('@/src/assets/images/robot-looking.gif')} style={styles.robotImage} contentFit='contain' />
+
             <View style={styles.carouselWrapper}>
                <TouchableOpacity onPress={handlePrevSlide}>
                   <MaterialIcons name='chevron-left' size={30} color={Colors.deepCyan} />
                </TouchableOpacity>
-               <View style={styles.carouselItem}>
+
+               <View style={styles.carouselBackground}>
                   <Text style={styles.carouselText}>{sliderTexts[currentSlide]}</Text>
                </View>
+
                <TouchableOpacity onPress={handleNextSlide}>
                   <MaterialIcons name='chevron-right' size={30} color={Colors.deepCyan} />
                </TouchableOpacity>
@@ -49,20 +52,13 @@ export default function HomeScreen() {
          <View style={styles.modalitiesSection}>
             <View style={styles.sectionHeader}>
                <MaterialIcons name='category' size={24} color={Colors.white} />
-               <Text style={styles.sectionTitle}>Modalidade do Trabalho</Text>
+               <Text style={styles.sectionText}>Modalidade do Trabalho</Text>
             </View>
 
-            {/* 2. Substituímos o ScrollView + map pela FlatList */}
             <FlatList
                horizontal
                data={modalities}
-               renderItem={({ item }) => (
-                  <ModalityCard
-                     title={item.titulo}
-                     imageUrl={item.imagem}
-                     onPress={() => handleNavigateToSurvey(item.id)}
-                  />
-               )}
+               renderItem={({ item }) => (<ModalityCard title={item.titulo} imageUrl={item.imagem} onPress={() => handleNavigateToSurvey(item.id)} />)}
                keyExtractor={(item) => item.id}
                showsHorizontalScrollIndicator={false}
                contentContainerStyle={styles.cardList}
@@ -85,21 +81,20 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       height: '40%',
-      paddingHorizontal: 10
+      paddingHorizontal: 8
    },
    robotImage: {
-      width: 170,
-      height: 170
+      width: 180,
+      height: 180
    },
    carouselWrapper: {
       flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: 3
+      justifyContent: 'center',
+      gap: 2
    },
-   carouselItem: {
-      flex: 1,
+   carouselBackground: {
       backgroundColor: Colors.cyan,
       borderTopLeftRadius: 20,
       borderBottomRightRadius: 20,
@@ -109,32 +104,29 @@ const styles = StyleSheet.create({
    },
    carouselText: {
       color: Colors.white,
-      fontSize: 14,
-      textAlign: 'center',
-      lineHeight: 18
+      fontSize: 16,
+      textAlign: 'left',
+      lineHeight: 19,
    },
    modalitiesSection: {
-      paddingTop: 30,
+      marginTop: 40,
       backgroundColor: Colors.cyan,
-      // Adicionado para garantir que a seção ocupe o espaço restante
       flex: 1,
    },
    sectionHeader: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
-      paddingHorizontal: 20,
-      marginBottom: 16,
+      paddingHorizontal: 18,
+      marginBottom: 22,
    },
-   sectionTitle: {
-      fontSize: 20,
+   sectionText: {
+      fontSize: 21,
       fontWeight: 'bold',
       color: Colors.white,
    },
    cardList: {
       gap: 15,
-      paddingHorizontal: 15,
-      // Adicionado para garantir que a lista tenha altura
-      paddingBottom: 15,
+      paddingHorizontal: 18
    }
 });

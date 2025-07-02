@@ -26,8 +26,8 @@ export default React.memo(function ModalityCard({ title, imageUrl, onPress }: Mo
 
 const styles = StyleSheet.create({
    card: {
-      width: 230,
-      height: 230,
+      width: 260,
+      height: 260,
       backgroundColor: Colors.cyan,
       borderRadius: 20,
       borderWidth: 3,
@@ -55,6 +55,6 @@ const styles = StyleSheet.create({
    cardButtonText: {
       color: Colors.cyan,
       fontWeight: 'bold',
-      fontSize: 14,
+      fontSize: 17,
    },
 });

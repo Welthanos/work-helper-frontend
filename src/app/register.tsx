@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
       borderTopLeftRadius: 30,
       borderTopRightRadius: 30,
       paddingHorizontal: 30,
-      paddingTop: 110,
+      paddingTop: 150,
       position: 'relative',
    },
    logoWrapper: {
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
       borderRadius: 30,
       alignItems: 'center',
       marginBottom: 20,
-      marginTop: 15,
+      marginTop: 10,
    },
    registerText: {
       color: Colors.white,
