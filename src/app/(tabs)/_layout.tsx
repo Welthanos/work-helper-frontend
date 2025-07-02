@@ -2,7 +2,7 @@ import { Tabs, useRouter } from 'expo-router';
 import { Image, TouchableOpacity, View } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React from 'react';
-import { Colors } from '@/constants/Colors';
+import { Colors } from '@/src/constants/Colors';
 
 export default function TabLayout() {
    const router = useRouter();
@@ -35,7 +35,7 @@ export default function TabLayout() {
             options={{
                title: 'Início',
                headerTitle: () => (
-                  <Image source={require('@/assets/images/logo-text.png')} style={{ width: 150, resizeMode: 'contain' }} />
+                  <Image source={require('@/src/assets/images/logo-text.png')} style={{ width: 150, resizeMode: 'contain' }} />
                ),
                tabBarIcon: ({ color }) => (
                   <MaterialIcons size={24} name='home' color={color} />
