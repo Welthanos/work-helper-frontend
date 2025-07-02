@@ -2,9 +2,10 @@ import SurveyCard from '@/src/components/SurveyCard';
 import { Colors } from '@/src/constants/Colors';
 import { Survey } from '@/src/types/types';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { Image } from 'expo-image';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
 const surveys: Survey[] = [
    { id: '1', titulo: 'Avaliação Semestral 1', descricao: 'Avaliação dos trabalhadores do setor de estoque da Filiada X.', data: '01/03/2023', tipo: 'MMC' },
@@ -16,6 +17,7 @@ const surveys: Survey[] = [
 
 export default function SurveyScreen() {
    const router = useRouter();
+   const { id } = useLocalSearchParams();
 
    function handleEdit(surveyId: string) {
       // EDITAR
@@ -26,14 +28,21 @@ export default function SurveyScreen() {
    };
 
    return (
+
       <View style={styles.container}>
-         <FlatList
-            data={surveys}
-            renderItem={({ item }) => (<SurveyCard survey={item} onEdit={handleEdit} onDelete={handleDelete} />)}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.scrollContent}
-            ListFooterComponent={<View style={{ height: 100 }} />}
-         />
+         {surveys && surveys.length > 0 && id === '1' ? (
+            <FlatList
+               data={surveys}
+               renderItem={({ item }) => (<SurveyCard survey={item} onEdit={handleEdit} onDelete={handleDelete} />)}
+               keyExtractor={(item) => item.id}
+               contentContainerStyle={styles.scrollContent}
+               ListFooterComponent={<View style={{ height: 100 }} />}
+            />
+         ) : (
+            <View style={styles.emptyListContainer}>
+               <Image source={require('@/src/assets/images/robot-apologizing.gif')} style={styles.robotImage} contentFit='contain' />
+            </View>
+         )}
 
          <View style={styles.footerWrapper}>
             <View style={styles.footerBackground}>
@@ -88,12 +97,23 @@ const styles = StyleSheet.create({
       top: -28
    },
    addButton: {
-      backgroundColor: Colors.cyan,
+      backgroundColor: Colors.darkBlue,
       width: 60,
       height: 60,
       borderRadius: 30,
       alignItems: 'center',
       justifyContent: 'center',
       elevation: 5
+   },
+   emptyListContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingBottom: 100,
+   },
+   robotImage: {
+      width: 220,
+      height: 220
    }
 });
+

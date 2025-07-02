@@ -29,11 +29,11 @@ export default React.memo(function SurveyCard({ survey, onEdit, onDelete }: Surv
 
           <View style={styles.actionsContainer}>
             <TouchableOpacity onPress={() => onEdit(survey.id)}>
-              <MaterialIcons name="edit" size={22} color={Colors.cyan} />
+              <MaterialIcons name="edit" size={22} color={Colors.darkBlue} />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => onDelete(survey.id)}>
-              <MaterialIcons name="delete" size={22} color={Colors.cyan} />
+              <MaterialIcons name="delete" size={22} color={Colors.darkBlue} />
             </TouchableOpacity>
           </View>
         </View>
@@ -44,7 +44,7 @@ export default React.memo(function SurveyCard({ survey, onEdit, onDelete }: Surv
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.cyan,
+    backgroundColor: Colors.darkBlue,
     borderRadius: 10,
     padding: 3,
     elevation: 6
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   },
   descriptionText: {
     fontSize: 15,
-    color: Colors.deepCyan,
+    color: Colors.darkBlue,
     lineHeight: 20,
   },
   footer: {
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   badge: {
-    backgroundColor: Colors.cyan,
+    backgroundColor: Colors.darkBlue,
     paddingHorizontal: 12,
     justifyContent: 'center',
   },
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   dateText: {
-    color: Colors.deepCyan,
+    color: Colors.darkBlue,
     fontSize: 16
   },
   actionsContainer: {
