@@ -6,100 +6,136 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 type SurveyCardProps = {
   survey: Survey;
+  isDatesVisible: boolean;
+  onPressViewAssessments: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  onToggleDates: (id: string) => void;
 };
 
-export default React.memo(function SurveyCard({ survey, onEdit, onDelete }: SurveyCardProps) {
+export default React.memo(function SurveyCard({ survey, isDatesVisible, onPressViewAssessments, onEdit, onDelete, onToggleDates }: SurveyCardProps) {
   return (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>{survey.titulo}</Text>
+      <Text style={styles.title}>{survey.title}</Text>
+      <Text style={styles.description}>{survey.description}</Text>
 
-      <View style={styles.descriptionWrapper}>
-        <Text style={styles.descriptionText}>{survey.descricao}</Text>
-      </View>
 
       <View style={styles.footer}>
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>{survey.tipo}</Text>
-        </View>
+        <TouchableOpacity style={styles.assessmentsButton} onPress={() => onPressViewAssessments(survey.id)} activeOpacity={0.7}>
+          <Text style={styles.assessmentsButtonText}>Ver avaliações</Text>
+          <MaterialIcons name='keyboard-double-arrow-right' size={20} color={Colors.white} style={{ paddingTop: 2.8 }} />
+        </TouchableOpacity>
 
-        <View style={styles.footerDetails}>
-          <Text style={styles.dateText}>{survey.data}</Text>
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity onPress={() => onToggleDates(survey.id)}>
+            <MaterialIcons name='date-range' size={26} color={Colors.deepCyan} />
+          </TouchableOpacity>
 
-          <View style={styles.actionsContainer}>
-            <TouchableOpacity onPress={() => onEdit(survey.id)}>
-              <MaterialIcons name="edit" size={22} color={Colors.darkBlue} />
-            </TouchableOpacity>
+          <TouchableOpacity onPress={() => onEdit(survey.id)}>
+            <MaterialIcons name='edit' size={24} color={Colors.deepCyan} />
+          </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => onDelete(survey.id)}>
-              <MaterialIcons name="delete" size={22} color={Colors.darkBlue} />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress={() => onDelete(survey.id)}>
+            <MaterialIcons name='delete' size={24} color={Colors.deepCyan} />
+          </TouchableOpacity>
         </View>
       </View>
+
+      {isDatesVisible && (
+        <View style={styles.datesPopover}>
+          <View style={styles.dateBlock}>
+            <Text style={styles.dateLabel}>Data inicial:</Text>
+            <Text style={styles.dateValue}>{survey.startDate}</Text>
+          </View>
+          <View style={styles.dateBlock}>
+            <Text style={styles.dateLabel}>Data final:</Text>
+            <Text style={styles.dateValue}>{survey.endDate}</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 });
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: Colors.deepCyan,
     borderRadius: 10,
-    padding: 3,
-    elevation: 6
+    padding: 4,
+    elevation: 5
   },
-  cardTitle: {
+  title: {
     color: Colors.white,
     fontSize: 17,
-    fontWeight: '500',
-    textAlign: 'left',
-    paddingHorizontal: 12,
-    paddingBottom: 5,
-    paddingTop: 2,
+    fontWeight: 500,
+    paddingHorizontal: 10,
+    paddingTop: 5,
+    paddingBottom: 8
   },
-  descriptionWrapper: {
+  description: {
     backgroundColor: Colors.white,
+    color: Colors.deepCyan,
+    fontSize: 15,
     paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     marginBottom: 3,
   },
-  descriptionText: {
-    fontSize: 15,
-    color: Colors.darkBlue,
-    lineHeight: 20,
-  },
   footer: {
+    backgroundColor: Colors.white,
     flexDirection: 'row',
-    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomRightRadius: 6,
+    borderBottomLeftRadius: 6,
+    gap: 10
   },
-  badge: {
-    backgroundColor: Colors.darkBlue,
-    paddingHorizontal: 12,
-    justifyContent: 'center',
+  assessmentsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.deepCyan,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderTopRightRadius: 25,
+    borderBottomLeftRadius: 5,
+    paddingRight: 16,
+    gap: 3
   },
-  badgeText: {
+  assessmentsButtonText: {
     color: Colors.white,
-    fontSize: 16,
-    fontWeight: '500',
+    fontWeight: 500,
+    fontSize: 15
   },
-  footerDetails: {
+  actionsContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingHorizontal: 15
+  },
+  datesPopover: {
+    position: 'absolute',
+    bottom: 46,
+    right: 46,
     backgroundColor: Colors.white,
-    borderBottomEndRadius: 6,
-    paddingVertical: 4,
-    paddingHorizontal: 15,
+    borderRadius: 5,
+    padding: 12,
+    flexDirection: 'column',
+    gap: 5,
+    elevation: 3,
+    zIndex: 10,
   },
-  dateText: {
-    color: Colors.darkBlue,
-    fontSize: 16
-  },
-  actionsContainer: {
+  dateBlock: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 30
+    gap: 5
+  },
+  dateLabel: {
+    color: Colors.deepCyan,
+    fontSize: 13
+  },
+  dateValue: {
+    color: Colors.deepCyan,
+    fontSize: 14,
+    fontWeight: 500,
   },
 });

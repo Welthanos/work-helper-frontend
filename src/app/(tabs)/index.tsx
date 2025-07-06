@@ -13,9 +13,9 @@ const sliderTexts = [
 ];
 
 const modalities: Modality[] = [
-   { id: '1', titulo: 'Manuseio de carga', imagem: require('@/src/assets/images/to.png') },
-   { id: '2', titulo: 'Escritório', imagem: require('@/src/assets/images/te.png') },
-   { id: '3', titulo: 'Outra Modalidade', imagem: require('@/src/assets/images/tc.png') },
+   { id: '1', title: 'Manuseio de carga', image: require('@/src/assets/images/to.png') },
+   { id: '2', title: 'Escritório', image: require('@/src/assets/images/te.png') },
+   { id: '3', title: 'Outra Modalidade', image: require('@/src/assets/images/tc.png') },
 ];
 
 export default function HomeScreen() {
@@ -58,7 +58,7 @@ export default function HomeScreen() {
             <FlatList
                horizontal
                data={modalities}
-               renderItem={({ item }) => (<ModalityCard title={item.titulo} imageUrl={item.imagem} onPress={() => handleNavigateToSurvey(item.id)} />)}
+               renderItem={({ item }) => (<ModalityCard modality={item} onPress={() => handleNavigateToSurvey(item.id)} />)}
                keyExtractor={(item) => item.id}
                showsHorizontalScrollIndicator={false}
                contentContainerStyle={styles.cardList}

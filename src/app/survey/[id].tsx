@@ -4,42 +4,50 @@ import { Survey } from '@/src/types/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const surveys: Survey[] = [
-   { id: '1', titulo: 'Avaliação Semestral 1', descricao: 'Avaliação dos trabalhadores do setor de estoque da Filiada X.', data: '01/03/2023', tipo: 'MMC' },
-   { id: '2', titulo: 'Avaliação Semestral 2', descricao: 'Avaliação dos trabalhadores do setor de estoque da Filiada Y.', data: '01/03/2023', tipo: 'MMC' },
-   { id: '3', titulo: 'Avaliação Semestral 3', descricao: 'Avaliação dos trabalhadores do setor de estoque da Filiada Z.', data: '01/03/2023', tipo: 'MMC' },
-   { id: '4', titulo: 'Avaliação Semestral 4', descricao: 'Avaliação dos trabalhadores do setor de estoque da Filiada W.', data: '01/03/2023', tipo: 'MMC' },
-   { id: '5', titulo: 'Avaliação Semestral 5', descricao: 'Avaliação dos trabalhadores do setor de estoque da Filiada K.', data: '01/03/2023', tipo: 'MMC' },
+   { id: '1', title: 'Avaliação Semestral 1', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada X.', startDate: '01/03/2023', endDate: '31/08/2023' },
+   { id: '2', title: 'Avaliação Semestral 2', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada Y.', startDate: '15/03/2023', endDate: '15/09/2023' },
+   { id: '3', title: 'Avaliação Semestral 1', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada X.', startDate: '01/03/2023', endDate: '31/08/2023' },
+   { id: '4', title: 'Avaliação Semestral 2', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada Y.', startDate: '15/03/2023', endDate: '15/09/2023' },
+   { id: '5', title: 'Avaliação Semestral 1', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada X.', startDate: '01/03/2023', endDate: '31/08/2023' },
+   { id: '6', title: 'Avaliação Semestral 2', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada Y.', startDate: '15/03/2023', endDate: '15/09/2023' },
 ];
 
 export default function SurveyScreen() {
    const router = useRouter();
+   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
    const { id } = useLocalSearchParams();
-
-   function handleEdit(surveyId: string) {
-      // EDITAR
+   const handleToggleDates = (surveyId: string) => {
+      setOpenPopoverId(prevId => (prevId === surveyId ? null : surveyId));
    };
 
-   function handleDelete(surveyId: string) {
-      // DELETAR
-   };
+   const handleNavigateToAssessments = () => { router.push('/(tabs)') };
+   const handleEdit = (surveyId: string) => { };
+   const handleDelete = (surveyId: string) => { };
 
    return (
-
       <View style={styles.container}>
-         {surveys && surveys.length > 0 && id === '1' ? (
+         {surveys && surveys.length > 0 && id == '1' ? (
             <FlatList
                data={surveys}
-               renderItem={({ item }) => (<SurveyCard survey={item} onEdit={handleEdit} onDelete={handleDelete} />)}
+               renderItem={({ item }) => (
+                  <SurveyCard
+                     survey={item}
+                     onPressViewAssessments={handleNavigateToAssessments}
+                     onEdit={handleEdit}
+                     onDelete={handleDelete}
+                     isDatesVisible={openPopoverId === item.id}
+                     onToggleDates={() => handleToggleDates(item.id)}
+                  />
+               )}
                keyExtractor={(item) => item.id}
-               contentContainerStyle={styles.scrollContent}
-               ListFooterComponent={<View style={{ height: 100 }} />}
+               contentContainerStyle={styles.listContent}
             />
          ) : (
-            <View style={styles.emptyListContainer}>
+            <View style={styles.emptyContainer}>
                <Image source={require('@/src/assets/images/robot-apologizing.gif')} style={styles.robotImage} contentFit='contain' />
             </View>
          )}
@@ -62,11 +70,22 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: Colors.white,
    },
-   scrollContent: {
-      marginTop: 15,
+   listContent: {
+      paddingTop: 15,
       paddingHorizontal: 16,
-      paddingBottom: 40,
-      gap: 15
+      gap: 15,
+      paddingBottom: 142,
+   },
+   emptyContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+   },
+   robotImage: {
+      width: 220,
+      height: 220,
+      marginBottom: 20,
    },
    footerWrapper: {
       position: 'absolute',
@@ -97,23 +116,12 @@ const styles = StyleSheet.create({
       top: -28
    },
    addButton: {
-      backgroundColor: Colors.darkBlue,
+      backgroundColor: Colors.deepCyan,
       width: 60,
       height: 60,
       borderRadius: 30,
       alignItems: 'center',
       justifyContent: 'center',
-      elevation: 5
+      elevation: 3
    },
-   emptyListContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingBottom: 100,
-   },
-   robotImage: {
-      width: 220,
-      height: 220
-   }
 });
-

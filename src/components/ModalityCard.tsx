@@ -1,23 +1,23 @@
 import { Colors } from '@/src/constants/Colors';
 import { Image } from 'expo-image';
 import React from 'react';
-import { ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modality } from '../types/types';
 
 type ModalityCardProps = {
-   title: string;
-   imageUrl: ImageSourcePropType;
+   modality: Modality;
    onPress: () => void;
 };
 
-export default React.memo(function ModalityCard({ title, imageUrl, onPress }: ModalityCardProps) {
+export default React.memo(function ModalityCard({ modality, onPress }: ModalityCardProps) {
    return (
       <View style={styles.card}>
          <View style={styles.cardImageContainer}>
-            <Image source={imageUrl} style={styles.cardImage} contentFit='contain' />
+            <Image source={modality.image} style={styles.cardImage} contentFit='contain' />
          </View>
 
          <TouchableOpacity style={styles.cardButton} onPress={onPress}>
-            <Text style={styles.cardButtonText}>{title}</Text>
+            <Text style={styles.cardButtonText}>{modality.title}</Text>
          </TouchableOpacity>
       </View>
    );
@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       borderWidth: 3,
       borderColor: Colors.white,
-      elevation: 6,
-      marginBottom: 6,
+      elevation: 5,
+      marginBottom: 5,
       marginLeft: 3
    },
    cardImageContainer: {
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
       paddingVertical: 8,
       margin: 12,
       alignItems: 'center',
-      elevation: 4,
+      elevation: 3,
    },
    cardButtonText: {
       color: Colors.cyan,

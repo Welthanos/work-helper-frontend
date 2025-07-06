@@ -1,15 +1,15 @@
 import { ImageSourcePropType } from 'react-native';
 
 export type Modality = {
-    id: string;
-    titulo: string;
-    imagem: ImageSourcePropType;
+  id: string;
+  title: string;
+  image: ImageSourcePropType;
 };
 
 export type Survey = {
   id: string;
-  titulo: string;
-  descricao: string;
-  data: string;
-  tipo: string;
+  title: string;
+  description: string;
+  startDate: string;
+  endDate: string;
 };

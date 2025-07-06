@@ -107,7 +107,7 @@ export default function RegisterScreen() {
 
             <TouchableOpacity style={styles.registerButton} onPress={handleRegister} disabled={loading}>
                {loading ? (
-                  <ActivityIndicator color={Colors.white} />
+                  <ActivityIndicator size={28} color={Colors.white} />
                ) : (
                   <Text style={styles.registerText}>Cadastrar</Text>
                )}
