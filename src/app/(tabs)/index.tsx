@@ -1,22 +1,11 @@
 import ModalityCard from '@/src/components/ModalityCard';
 import { Colors } from '@/src/constants/Colors';
-import { Modality } from '@/src/types/types';
+import { modalities, sliderTexts } from '@/src/constants/Data';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
-const sliderTexts = [
-   'As avaliações dos trabalhadores são agrupadas pela modalidade do trabalho e período de pesquisa.',
-   'Identifique padrões de risco no ambiente de trabalho para melhores ações preventivas.',
-];
-
-const modalities: Modality[] = [
-   { id: '1', title: 'Manuseio de carga', image: require('@/src/assets/images/to.png') },
-   { id: '2', title: 'Escritório', image: require('@/src/assets/images/te.png') },
-   { id: '3', title: 'Outra Modalidade', image: require('@/src/assets/images/tc.png') },
-];
 
 export default function HomeScreen() {
    const router = useRouter();

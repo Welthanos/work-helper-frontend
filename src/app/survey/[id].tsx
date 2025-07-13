@@ -1,20 +1,11 @@
+import FooterAddButton from '@/src/components/FooterAddButton';
 import SurveyCard from '@/src/components/SurveyCard';
 import { Colors } from '@/src/constants/Colors';
-import { Survey } from '@/src/types/types';
-import { MaterialIcons } from '@expo/vector-icons';
+import { surveys } from '@/src/constants/Data';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { FlatList, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
-
-const surveys: Survey[] = [
-   { id: '1', title: 'Avaliação Semestral 1', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada X.', startDate: '01/03/2023', endDate: '31/08/2023' },
-   { id: '2', title: 'Avaliação Semestral 2', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada Y.', startDate: '15/03/2023', endDate: '15/09/2023' },
-   { id: '3', title: 'Avaliação Semestral 1', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada X.', startDate: '01/03/2023', endDate: '31/08/2023' },
-   { id: '4', title: 'Avaliação Semestral 2', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada Y.', startDate: '15/03/2023', endDate: '15/09/2023' },
-   { id: '5', title: 'Avaliação Semestral 1', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada X.', startDate: '01/03/2023', endDate: '31/08/2023' },
-   { id: '6', title: 'Avaliação Semestral 2', description: 'Avaliação dos trabalhadores do setor de estoque da Filiada Y.', startDate: '15/03/2023', endDate: '15/09/2023' },
-];
+import { FlatList, StyleSheet, View } from 'react-native';
 
 export default function SurveyScreen() {
    const router = useRouter();
@@ -24,9 +15,13 @@ export default function SurveyScreen() {
       setOpenPopoverId(prevId => (prevId === surveyId ? null : surveyId));
    };
 
-   const handleNavigateToAssessments = () => { router.push('/(tabs)') };
-   const handleEdit = (surveyId: string) => { };
-   const handleDelete = (surveyId: string) => { };
+   const handleNavigateToAssessments = (surveyId: string) => {
+      setOpenPopoverId(null)
+      router.push({ pathname: '/assessment/[id]', params: { id: surveyId } });
+   };
+
+   const handleEdit = (surveyId: string) => { setOpenPopoverId(null) };
+   const handleDelete = (surveyId: string) => { setOpenPopoverId(null) };
 
    return (
       <View style={styles.container}>
@@ -36,7 +31,7 @@ export default function SurveyScreen() {
                renderItem={({ item }) => (
                   <SurveyCard
                      survey={item}
-                     onPressViewAssessments={handleNavigateToAssessments}
+                     onPressViewAssessments={() => handleNavigateToAssessments(item.id)}
                      onEdit={handleEdit}
                      onDelete={handleDelete}
                      isDatesVisible={openPopoverId === item.id}
@@ -45,6 +40,7 @@ export default function SurveyScreen() {
                )}
                keyExtractor={(item) => item.id}
                contentContainerStyle={styles.listContent}
+               showsVerticalScrollIndicator={false}
             />
          ) : (
             <View style={styles.emptyContainer}>
@@ -52,15 +48,7 @@ export default function SurveyScreen() {
             </View>
          )}
 
-         <View style={styles.footerWrapper}>
-            <View style={styles.footerBackground}>
-               <View style={styles.buttonBackground}>
-                  <TouchableOpacity style={styles.addButton} activeOpacity={0.7} onPress={() => { }}>
-                     <MaterialIcons name='add' size={35} color={Colors.white} />
-                  </TouchableOpacity>
-               </View>
-            </View>
-         </View>
+         <FooterAddButton />
       </View>
    );
 }
@@ -86,42 +74,5 @@ const styles = StyleSheet.create({
       width: 220,
       height: 220,
       marginBottom: 20,
-   },
-   footerWrapper: {
-      position: 'absolute',
-      bottom: 0,
-      width: '100%',
-      height: 130,
-      alignItems: 'center',
-      backgroundColor: Colors.white
-   },
-   footerBackground: {
-      position: 'absolute',
-      bottom: 0,
-      width: '100%',
-      height: 100,
-      backgroundColor: Colors.black,
-      borderTopLeftRadius: 30,
-      borderTopRightRadius: 30,
-      alignItems: 'center'
-   },
-   buttonBackground: {
-      backgroundColor: Colors.white,
-      width: 75,
-      height: 75,
-      borderRadius: 37.5,
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'absolute',
-      top: -28
-   },
-   addButton: {
-      backgroundColor: Colors.deepCyan,
-      width: 60,
-      height: 60,
-      borderRadius: 30,
-      alignItems: 'center',
-      justifyContent: 'center',
-      elevation: 3
-   },
+   }
 });

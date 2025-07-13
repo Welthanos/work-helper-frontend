@@ -28,28 +28,28 @@ export default React.memo(function SurveyCard({ survey, isDatesVisible, onPressV
 
         <View style={styles.actionsContainer}>
           <TouchableOpacity onPress={() => onToggleDates(survey.id)}>
-            <MaterialIcons name='date-range' size={26} color={Colors.deepCyan} />
+            <MaterialIcons name='date-range' size={26} color={Colors.darkBlue} />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => onEdit(survey.id)}>
-            <MaterialIcons name='edit' size={24} color={Colors.deepCyan} />
+            <MaterialIcons name='edit' size={24} color={Colors.darkBlue} />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => onDelete(survey.id)}>
-            <MaterialIcons name='delete' size={24} color={Colors.deepCyan} />
+            <MaterialIcons name='delete' size={24} color={Colors.darkBlue} />
           </TouchableOpacity>
         </View>
       </View>
 
       {isDatesVisible && (
         <View style={styles.datesPopover}>
-          <View style={styles.dateBlock}>
-            <Text style={styles.dateLabel}>Data inicial:</Text>
-            <Text style={styles.dateValue}>{survey.startDate}</Text>
+          <View style={styles.datePopoverBlock}>
+            <Text style={styles.datePopoverLabel}>Data inicial:</Text>
+            <Text style={styles.datePopoverValue}>{survey.startDate}</Text>
           </View>
-          <View style={styles.dateBlock}>
-            <Text style={styles.dateLabel}>Data final:</Text>
-            <Text style={styles.dateValue}>{survey.endDate}</Text>
+          <View style={styles.datePopoverBlock}>
+            <Text style={styles.datePopoverLabel}>Data final:</Text>
+            <Text style={styles.datePopoverValue}>{survey.endDate}</Text>
           </View>
         </View>
       )}
@@ -59,10 +59,10 @@ export default React.memo(function SurveyCard({ survey, isDatesVisible, onPressV
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.deepCyan,
+    backgroundColor: Colors.cyan,
     borderRadius: 10,
     padding: 4,
-    elevation: 5
+    elevation: 3
   },
   title: {
     color: Colors.white,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   description: {
     backgroundColor: Colors.white,
-    color: Colors.deepCyan,
+    color: Colors.darkBlue,
     fontSize: 15,
     paddingVertical: 8,
     paddingHorizontal: 10,
@@ -87,16 +87,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomRightRadius: 6,
     borderBottomLeftRadius: 6,
-    gap: 10
+    gap: 5
   },
   assessmentsButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.deepCyan,
+    backgroundColor: Colors.darkBlue,
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderTopRightRadius: 25,
     borderBottomLeftRadius: 5,
+    borderRightWidth: 4,
+    borderColor: Colors.cyan,
     paddingRight: 16,
     gap: 3
   },
@@ -110,31 +112,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 15
+    paddingHorizontal: 20
   },
   datesPopover: {
+    backgroundColor: Colors.darkBlue,
     position: 'absolute',
-    bottom: 46,
-    right: 46,
-    backgroundColor: Colors.white,
+    flexDirection: 'column',
+    bottom: 44,
+    right: 115,
     borderRadius: 5,
     padding: 12,
-    flexDirection: 'column',
     gap: 5,
     elevation: 3,
     zIndex: 10,
   },
-  dateBlock: {
+  datePopoverBlock: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5
   },
-  dateLabel: {
-    color: Colors.deepCyan,
+  datePopoverLabel: {
+    color: Colors.white,
     fontSize: 13
   },
-  dateValue: {
-    color: Colors.deepCyan,
+  datePopoverValue: {
+    color: Colors.white,
     fontSize: 14,
     fontWeight: 500,
   },
