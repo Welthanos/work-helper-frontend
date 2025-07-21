@@ -127,9 +127,9 @@ export default function RegisterScreen() {
 
                 <TouchableOpacity style={styles.registerButton} onPress={handleRegister} disabled={loading}>
                     {loading ? (
-                        <ActivityIndicator size="large" color={Colors.white} />
+                        <ActivityIndicator size={28} color={Colors.white} />
                     ) : (
-                        <Text style={styles.registerText}>Cadastrar</Text>
+                        <Text style={styles.registerButtonText}>Cadastrar</Text>
                     )}
                 </TouchableOpacity>
 
@@ -191,15 +191,13 @@ const styles = StyleSheet.create({
     },
     registerButton: {
         backgroundColor: Colors.cyan,
-        paddingVertical: 12,
+        paddingVertical: 9,
         borderRadius: 30,
         alignItems: 'center',
         marginBottom: 20,
         marginTop: 10,
-        minHeight: 50,
-        justifyContent: 'center'
     },
-    registerText: {
+    registerButtonText: {
         color: Colors.white,
         fontWeight: 'bold',
         fontSize: 21,

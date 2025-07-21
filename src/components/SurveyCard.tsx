@@ -3,6 +3,7 @@ import { Survey } from '@/src/types/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { formatDate } from '../utils/dates';
 
 type SurveyCardProps = {
   survey: Survey;
@@ -11,14 +12,13 @@ type SurveyCardProps = {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   onToggleDates: (id: string) => void;
-};
+}
 
 export default React.memo(function SurveyCard({ survey, isDatesVisible, onPressViewAssessments, onEdit, onDelete, onToggleDates }: SurveyCardProps) {
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{survey.title}</Text>
       <Text style={styles.description}>{survey.description}</Text>
-
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.assessmentsButton} onPress={() => onPressViewAssessments(survey.id)} activeOpacity={0.7}>
@@ -45,11 +45,11 @@ export default React.memo(function SurveyCard({ survey, isDatesVisible, onPressV
         <View style={styles.datesPopover}>
           <View style={styles.datePopoverBlock}>
             <Text style={styles.datePopoverLabel}>Data inicial:</Text>
-            <Text style={styles.datePopoverValue}>{survey.startDate}</Text>
+            <Text style={styles.datePopoverValue}>{formatDate(survey.start_date)}</Text>
           </View>
           <View style={styles.datePopoverBlock}>
             <Text style={styles.datePopoverLabel}>Data final:</Text>
-            <Text style={styles.datePopoverValue}>{survey.endDate}</Text>
+            <Text style={styles.datePopoverValue}>{formatDate(survey.end_date)}</Text>
           </View>
         </View>
       )}

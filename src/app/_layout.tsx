@@ -19,9 +19,13 @@ function InitialLayout() {
 
    return (
       <Stack>
-         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+         <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+         <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+
          <Stack.Screen name='survey/[id]' options={{ headerShown: true, title: 'Pesquisas' }} />
+         <Stack.Screen name='survey/create' options={{ headerShown: true, title: 'Criar Pesquisa' }} />
+         <Stack.Screen name='survey/edit/[id]' options={{ headerShown: true, title: 'Editar Pesquisa' }} />
+
          <Stack.Screen name='assessment/[id]' options={{ headerShown: true, title: 'Avaliações' }} />
       </Stack>
    );

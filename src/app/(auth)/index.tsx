@@ -75,7 +75,7 @@ export default function LoginScreen() {
                     {loading ? (
                         <ActivityIndicator size={28} color={Colors.white} />
                     ) : (
-                        <Text style={styles.loginText}>Entrar</Text>
+                        <Text style={styles.loginButtonText}>Entrar</Text>
                     )}
                 </TouchableOpacity>
 
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginTop: 10,
     },
-    loginText: {
+    loginButtonText: {
         color: Colors.white,
         fontWeight: 'bold',
         fontSize: 21,

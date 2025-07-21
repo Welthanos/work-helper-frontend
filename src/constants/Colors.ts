@@ -5,5 +5,6 @@ export const Colors = {
    cyan: '#00B5CE',
    deepCyan: '#006A78',
    gray: '#898888',
+   blueGray: '#8581a1ff',
    darkBlue: '#2a245e'
 };

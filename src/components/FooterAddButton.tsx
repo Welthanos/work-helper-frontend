@@ -3,12 +3,16 @@ import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-export default function FooterAddButton() {
+type FooterAddButtonProps = {
+    onPress: () => void;
+}
+
+export default function FooterAddButton({ onPress }: FooterAddButtonProps) {
     return (
         <View style={styles.footerWrapper}>
             <View style={styles.footerBackground}>
                 <View style={styles.buttonBackground}>
-                    <TouchableOpacity style={styles.addButton} activeOpacity={0.7} onPress={() => { }}>
+                    <TouchableOpacity style={styles.addButton} activeOpacity={0.7} onPress={onPress}>
                         <MaterialIcons name='add' size={35} color={Colors.white} />
                     </TouchableOpacity>
                 </View>
