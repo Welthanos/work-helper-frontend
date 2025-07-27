@@ -1,32 +1,21 @@
 import AssessmentCard from '@/src/components/AssessmentCard';
 import FooterAddButton from '@/src/components/FooterAddButton';
 import { Colors } from '@/src/constants/Colors';
-import { assessments } from '@/src/constants/Data';
+import { useAssessments } from '@/src/hooks/useAssessments';
 import { Image } from 'expo-image';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import React from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 
 export default function AssessmentScreen() {
-    const router = useRouter();
-    const { id } = useLocalSearchParams();
-    const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
+    const { id: surveyId } = useLocalSearchParams();
+    const { assessments, listLoading, isRefreshing, openPopoverId, handleRefresh, handleToggleDate, handleDelete, handleNavigateToAssessmentCreate, handleEdit, handleNavigateToRecommendations, } = useAssessments(surveyId as string);
 
-    const handleToggleDate = (assessmentId: string) => {
-        setOpenPopoverId(prevId => (prevId === assessmentId ? null : assessmentId));
-    };
-
-    const handleNavigateToRecommendations = () => {
-        setOpenPopoverId(null)
-        router.push({ pathname: '/(tabs)', params: {} });
-    };
-
-    const handleEdit = (assessmentId: string) => { setOpenPopoverId(null) };
-    const handleDelete = (assessmentId: string) => { setOpenPopoverId(null) };
+    if (listLoading) return <View style={styles.loadingContainer}><ActivityIndicator size='large' color={Colors.darkBlue} /></View>
 
     return (
         <View style={styles.container}>
-            {assessments && assessments.length > 0 && id == '1' ? (
+            {assessments && assessments.length > 0 ? (
                 <FlatList
                     data={assessments}
                     renderItem={({ item }) => (
@@ -41,7 +30,8 @@ export default function AssessmentScreen() {
                     )}
                     keyExtractor={(item) => item.id}
                     contentContainerStyle={styles.listContent}
-                    showsVerticalScrollIndicator={false}
+                    onRefresh={handleRefresh}
+                    refreshing={isRefreshing}
                 />
             ) : (
                 <View style={styles.emptyContainer}>
@@ -49,7 +39,7 @@ export default function AssessmentScreen() {
                 </View>
             )}
 
-            <FooterAddButton />
+            <FooterAddButton onPress={handleNavigateToAssessmentCreate} />
         </View>
     );
 }
@@ -57,6 +47,12 @@ export default function AssessmentScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: Colors.white,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: Colors.white,
     },
     listContent: {

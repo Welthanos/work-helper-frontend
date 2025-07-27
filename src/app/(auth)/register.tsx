@@ -9,7 +9,6 @@ import api from '../../services/api';
 export default function RegisterScreen() {
     const router = useRouter();
     const [name, setName] = useState('');
-    const [cpf, setCpf] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -18,7 +17,7 @@ export default function RegisterScreen() {
     async function handleRegister() {
         if (loading) return;
 
-        if (!name.trim() || !email.trim() || !password || !confirmPassword || !cpf.trim()) {
+        if (!name.trim() || !email.trim() || !password || !confirmPassword) {
             Alert.alert('Atenção!', 'Por favor, preencha todos os campos.');
             return;
         }
@@ -30,7 +29,7 @@ export default function RegisterScreen() {
         setLoading(true);
 
         try {
-            await api.post('/auth/register', { name, cpf, email, password });
+            await api.post('/auth/register', { name, email, password });
 
             Alert.alert('Sucesso!', 'Sua conta foi criada. Faça o login para continuar.');
             router.replace('/');
@@ -69,19 +68,6 @@ export default function RegisterScreen() {
                         onChangeText={setName}
                         autoCapitalize='words'
                         textContentType='name'
-                    />
-                </View>
-
-                <View style={styles.inputGroup}>
-                    <MaterialIcons name='badge' size={20} color='gray' style={styles.iconLeft} />
-                    <TextInput
-                        placeholder='CPF (somente números)'
-                        placeholderTextColor='gray'
-                        style={styles.input}
-                        value={cpf}
-                        onChangeText={setCpf}
-                        keyboardType='numeric'
-                        maxLength={11}
                     />
                 </View>
 

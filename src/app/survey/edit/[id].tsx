@@ -1,89 +1,24 @@
+import { MaterialIcons } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
+import React from 'react';
+import { ActivityIndicator, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Colors } from '@/src/constants/Colors';
-import { formatApiDateToMask, maskDate } from '@/src/utils/dates';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { isAxiosError } from 'axios';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import api from '../../../services/api';
+import { useSurveys } from '../../../hooks/useSurveys';
 
 export default function SurveyEditScreen() {
-    const router = useRouter();
     const { id } = useLocalSearchParams();
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [initialLoading, setInitialLoading] = useState(true);
+    const { title, setTitle, description, setDescription, startDate, setStartDate, endDate, setEndDate, formLoading, saveSurvey, isEditing } = useSurveys(id as string);
 
-    useEffect(() => {
-        if (!id) return;
-
-        const fetchSurveyData = async () => {
-            try {
-                const response = await api.get(`/surveys/${id}`);
-                const survey = response.data;
-                setTitle(survey.title);
-                setDescription(survey.description);
-                setStartDate(formatApiDateToMask(survey.start_date));
-                setEndDate(formatApiDateToMask(survey.end_date));
-            } catch (error) {
-                Alert.alert('Erro', 'Não foi possível carregar os dados da pesquisa.');
-                router.back();
-            } finally {
-                setInitialLoading(false);
-            }
-        };
-
-        fetchSurveyData();
-    }, [id]);
-
-    async function handleUpdateSurvey() {
-        if (loading) return;
-        if (!title.trim() || !description.trim() || !startDate || !endDate) {
-            Alert.alert('Atenção!', 'Por favor, preencha todos os campos.');
-            return;
-        }
-        setLoading(true);
-
-        try {
-            const payload = { title, description, start_date: startDate, end_date: endDate };
-            await api.put(`/surveys/${id}`, payload);
-
-            Alert.alert('Sucesso!', 'A pesquisa foi atualizada.');
-            router.back();
-        } catch (error) {
-            let errorMessage = 'Não foi possível atualizar a pesquisa.';
-            if (isAxiosError(error) && error.response) errorMessage = error.response.data.message || errorMessage;
-            Alert.alert('Erro', errorMessage);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    if (initialLoading) {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size='large' color={Colors.darkBlue} />
-            </View>
-        );
-    }
+    if (formLoading && isEditing) return <View style={styles.loadingContainer}><ActivityIndicator size='large' color={Colors.darkBlue} /></View>
 
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }}>
+        <KeyboardAvoidingView style={{ flex: 1, backgroundColor: Colors.white }}>
             <ScrollView style={styles.container} keyboardShouldPersistTaps='handled'>
                 <View style={styles.fieldGroup}>
                     <Text style={styles.label}>Título</Text>
                     <View style={styles.inputContainer}>
                         <MaterialIcons name='title' size={20} style={styles.icon} />
-                        <TextInput
-                            placeholder='Título da pesquisa...'
-                            placeholderTextColor={Colors.blueGray}
-                            style={styles.input}
-                            value={title}
-                            onChangeText={setTitle}
-                        />
+                        <TextInput placeholder='Título da pesquisa...' placeholderTextColor={Colors.blueGray} style={styles.input} value={title} onChangeText={setTitle} />
                     </View>
                 </View>
 
@@ -91,15 +26,7 @@ export default function SurveyEditScreen() {
                     <Text style={styles.label}>Descrição</Text>
                     <View style={[styles.inputContainer, styles.textAreaContainer]}>
                         <MaterialIcons name='description' size={19} style={styles.icon} />
-                        <TextInput
-                            placeholder='Detalhes da pesquisa...'
-                            placeholderTextColor={Colors.blueGray}
-                            style={[styles.input, styles.textArea]}
-                            value={description}
-                            onChangeText={setDescription}
-                            multiline
-                            numberOfLines={4}
-                        />
+                        <TextInput placeholder='Detalhes da pesquisa...' placeholderTextColor={Colors.blueGray} style={[styles.input, styles.textArea]} value={description} onChangeText={setDescription} multiline numberOfLines={4} />
                     </View>
                 </View>
 
@@ -108,40 +35,21 @@ export default function SurveyEditScreen() {
                         <Text style={styles.label}>Data de Início</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name='date-range' size={20} style={styles.icon} />
-                            <TextInput
-                                placeholder='DD/MM/AAAA'
-                                placeholderTextColor={Colors.blueGray}
-                                style={styles.input}
-                                value={startDate}
-                                onChangeText={(text) => setStartDate(maskDate(text))}
-                                keyboardType='numeric'
-                                maxLength={10}
-                            />
+                            <TextInput placeholder='DD/MM/AAAA' placeholderTextColor={Colors.blueGray} style={styles.input} value={startDate} onChangeText={setStartDate} keyboardType='numeric' maxLength={10} />
                         </View>
                     </View>
+
                     <View style={[styles.fieldGroup, { flex: 1 }]}>
                         <Text style={styles.label}>Data de Fim</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name='date-range' size={20} style={styles.icon} />
-                            <TextInput
-                                placeholder='DD/MM/AAAA'
-                                placeholderTextColor={Colors.blueGray}
-                                style={styles.input}
-                                value={endDate}
-                                onChangeText={(text) => setEndDate(maskDate(text))}
-                                keyboardType='numeric'
-                                maxLength={10}
-                            />
+                            <TextInput placeholder='DD/MM/AAAA' placeholderTextColor={Colors.blueGray} style={styles.input} value={endDate} onChangeText={setEndDate} keyboardType='numeric' maxLength={10} />
                         </View>
                     </View>
                 </View>
 
-                <TouchableOpacity style={styles.submitButton} onPress={handleUpdateSurvey} activeOpacity={0.7} disabled={loading}>
-                    {loading ? (
-                        <ActivityIndicator size={25} color={Colors.white} />
-                    ) : (
-                        <Text style={styles.submitButtonText}>Salvar</Text>
-                    )}
+                <TouchableOpacity style={styles.submitButton} onPress={saveSurvey} activeOpacity={0.7} disabled={formLoading}>
+                    {formLoading ? (<ActivityIndicator size={25} color={Colors.white} />) : (<Text style={styles.submitButtonText}>Salvar</Text>)}
                 </TouchableOpacity>
             </ScrollView>
         </KeyboardAvoidingView>
@@ -153,6 +61,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.white,
         padding: 25,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Colors.white,
     },
     fieldGroup: {
         marginBottom: 18,

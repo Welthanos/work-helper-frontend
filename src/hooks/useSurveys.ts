@@ -4,18 +4,16 @@ import { Alert } from 'react-native';
 import { Survey } from '@/src/types/types';
 import api from '../services/api';
 import { isAxiosError } from 'axios';
-import { maskDate, formatApiDateToMask } from '../utils/dates';
+import { maskDate, formatApiDateToMask } from '../utils/date';
 
-export function useSurveys(id?: string) {
+export function useSurveys(surveyId?: string) {
     const router = useRouter();
 
-    // Estados para a tela de Listagem
     const [surveys, setSurveys] = useState<Survey[]>([]);
     const [listLoading, setListLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
 
-    // Estados para as telas de formulário
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [startDate, setStartDate] = useState('');
@@ -53,21 +51,50 @@ export function useSurveys(id?: string) {
 
     useFocusEffect(
         useCallback(() => {
-            if (!id) {
+            if (!surveyId) {
                 setListLoading(true);
                 fetchSurveysList();
             }
-        }, [id, fetchSurveysList])
+        }, [surveyId, fetchSurveysList])
     );
 
     useEffect(() => {
-        if (id) fetchSurveyById(id);
+        if (surveyId) fetchSurveyById(surveyId);
 
-    }, [id, fetchSurveyById]);
+    }, [surveyId, fetchSurveyById]);
 
     const handleRefresh = () => {
         setIsRefreshing(true);
         fetchSurveysList();
+    }
+
+    const saveSurvey = async () => {
+        if (formLoading) return;
+        if (!title.trim() || !description.trim() || !startDate || !endDate) {
+            Alert.alert('Atenção!', 'Por favor, preencha todos os campos.');
+            return;
+        }
+        setFormLoading(true);
+
+        try {
+            const payload = { title, description, start_date: startDate, end_date: endDate };
+            if (surveyId) {
+                await api.put(`/surveys/${surveyId}`, payload);
+                Alert.alert('Sucesso!', 'A pesquisa foi atualizada.');
+            } else {
+                await api.post('/surveys', payload);
+                Alert.alert('Sucesso!', 'A pesquisa foi criada.');
+            }
+            router.back();
+        } catch (error) {
+            let errorMessage = `Não foi possível ${surveyId ? 'atualizar' : 'criar'} a pesquisa.`;
+            if (isAxiosError(error) && error.response) {
+                errorMessage = error.response.data.message || errorMessage;
+            }
+            Alert.alert('Erro', errorMessage);
+        } finally {
+            setFormLoading(false);
+        }
     }
 
     const handleToggleDates = (id: string) => setOpenPopoverId(prevId => (prevId === id ? null : id));
@@ -89,7 +116,7 @@ export function useSurveys(id?: string) {
 
     const handleDelete = (id: string) => {
         setOpenPopoverId(null);
-        Alert.alert('Confirmar exclusão?', 'Tem certeza que deseja deletar esta pesquisa?',
+        Alert.alert('Confirmar exclusão?', 'Tem certeza que deseja excluir esta pesquisa?',
             [
                 { text: 'Cancelar', style: 'cancel' },
                 {
@@ -99,42 +126,13 @@ export function useSurveys(id?: string) {
                             await api.delete(`/surveys/${id}`);
                             setSurveys(current => current.filter(s => s.id !== id));
                         } catch (error) {
-                            Alert.alert('Erro', 'Não foi possível deletar a pesquisa.');
+                            Alert.alert('Erro', 'Não foi possível excluir a pesquisa.');
                         }
                     },
                 },
             ]
         );
     }
-
-    const saveSurvey = async () => {
-        if (formLoading) return;
-        if (!title.trim() || !description.trim() || !startDate || !endDate) {
-            Alert.alert('Atenção!', 'Por favor, preencha todos os campos.');
-            return;
-        }
-        setFormLoading(true);
-
-        try {
-            const payload = { title, description, start_date: startDate, end_date: endDate };
-            if (id) {
-                await api.put(`/surveys/${id}`, payload);
-                Alert.alert('Sucesso!', 'A pesquisa foi atualizada.');
-            } else {
-                await api.post('/surveys', payload);
-                Alert.alert('Sucesso!', 'A nova pesquisa foi criada.');
-            }
-            router.back();
-        } catch (error) {
-            let errorMessage = `Não foi possível ${id ? 'atualizar' : 'criar'} a pesquisa.`;
-            if (isAxiosError(error) && error.response) {
-                errorMessage = error.response.data.message || errorMessage;
-            }
-            Alert.alert('Erro', errorMessage);
-        } finally {
-            setFormLoading(false);
-        }
-    };
 
     return {
         surveys, listLoading, isRefreshing, openPopoverId,
@@ -143,6 +141,6 @@ export function useSurveys(id?: string) {
         title, setTitle, description, setDescription,
         startDate, setStartDate: (text: string) => setStartDate(maskDate(text)),
         endDate, setEndDate: (text: string) => setEndDate(maskDate(text)),
-        formLoading, saveSurvey, isEditing: !!id,
-    };
+        formLoading, saveSurvey, isEditing: !!surveyId,
+    }
 }

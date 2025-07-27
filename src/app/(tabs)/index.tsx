@@ -1,6 +1,6 @@
 import ModalityCard from '@/src/components/ModalityCard';
 import { Colors } from '@/src/constants/Colors';
-import { modalities, sliderTexts } from '@/src/constants/Data';
+import { modalities, sliderTexts } from '@/src/constants/Datas';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -16,7 +16,7 @@ export default function HomeScreen() {
 
    const handleNavigateToSurvey = (modalityId: string) => {
       router.push({ pathname: '/survey/[id]', params: { id: modalityId } });
-   };
+   }
 
    return (
       <View style={styles.container}>

@@ -4,7 +4,7 @@ import { Colors } from '@/src/constants/Colors';
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import { useSurveys } from '../../hooks/useSurveys';
 
 export default function SurveyScreen() {
@@ -22,13 +22,7 @@ export default function SurveyScreen() {
         handleDelete
     } = useSurveys();
 
-    if (listLoading) {
-        return (
-            <View style={styles.loadingContainer}>
-                <ActivityIndicator size='large' color={Colors.darkBlue} />
-            </View>
-        );
-    }
+    if (listLoading) return <View style={styles.loadingContainer}><ActivityIndicator size='large' color={Colors.darkBlue} /></View>
 
     return (
         <View style={styles.container}>

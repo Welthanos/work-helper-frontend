@@ -3,7 +3,7 @@ import { Survey } from '@/src/types/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { formatDate } from '../utils/dates';
+import { formatDate } from '../utils/date';
 
 type SurveyCardProps = {
   survey: Survey;

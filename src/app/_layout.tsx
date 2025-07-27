@@ -27,6 +27,8 @@ function InitialLayout() {
          <Stack.Screen name='survey/edit/[id]' options={{ headerShown: true, title: 'Editar Pesquisa' }} />
 
          <Stack.Screen name='assessment/[id]' options={{ headerShown: true, title: 'Avaliações' }} />
+         <Stack.Screen name='assessment/create' options={{ headerShown: true, title: 'Criar Avaliação' }} />
+         <Stack.Screen name='assessment/edit/[id]' options={{ headerShown: true, title: 'Editar Avaliação' }} />
       </Stack>
    );
 }
