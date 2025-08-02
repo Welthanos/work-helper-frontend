@@ -1,12 +1,24 @@
 import { Colors } from '@/src/constants/Colors';
 import { useAuth } from '@/src/context/AuthContext'; // 1. Importe o hook useAuth
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
 import React from 'react';
-import { Image, TouchableOpacity } from 'react-native';
+import { Alert, Image, TouchableOpacity } from 'react-native';
 
 export default function TabLayout() {
     const { logout } = useAuth();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        Alert.alert(
+            'Encerrar Sessão',
+            'Deseja realmente sair da conta?',
+            [
+                { text: 'Cancelar', style: 'cancel' },
+                { text: 'Sair', onPress: () => logout(), style: 'destructive' }
+            ]
+        );
+    }
 
     return (
         <Tabs
@@ -24,7 +36,7 @@ export default function TabLayout() {
                     backgroundColor: Colors.white,
                 },
                 headerRight: () => (
-                    <TouchableOpacity style={{ marginRight: 20 }} activeOpacity={0.5}>
+                    <TouchableOpacity style={{ marginRight: 20 }} activeOpacity={0.5} onPress={() => router.push('/about')}>
                         <MaterialIcons size={24} name={'info-outline'} color={Colors.darkBlue} />
                     </TouchableOpacity>
                 ),
@@ -45,9 +57,9 @@ export default function TabLayout() {
             />
 
             <Tabs.Screen
-                name='report'
+                name='reports'
                 options={{
-                    title: 'Relatório',
+                    title: 'Relatórios',
                     tabBarIcon: ({ color }) => (
                         <MaterialIcons size={30} name='bar-chart' color={color} />
                     ),
@@ -65,7 +77,7 @@ export default function TabLayout() {
                 listeners={{
                     tabPress: (e) => {
                         e.preventDefault();
-                        logout();
+                        handleLogout();
                     },
                 }}
             />

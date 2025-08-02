@@ -13,8 +13,10 @@ export default function RegisterScreen() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
-    async function handleRegister() {
+    const handleRegister = async () => {
         if (loading) return;
 
         if (!name.trim() || !email.trim() || !password || !confirmPassword) {
@@ -22,32 +24,40 @@ export default function RegisterScreen() {
             return;
         }
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            Alert.alert('Atenção!', 'Por favor, insira um e-mail válido.');
+            return;
+        }
+
         if (password !== confirmPassword) {
             Alert.alert('Atenção!', 'As senhas não coincidem.');
             return;
         }
+
+        if (password.length < 8) {
+            Alert.alert('Atenção!', 'A senha deve possuir no mínimo 8 dígitos.');
+            return;
+        }
+
         setLoading(true);
 
         try {
             await api.post('/auth/register', { name, email, password });
-
             Alert.alert('Sucesso!', 'Sua conta foi criada. Faça o login para continuar.');
             router.replace('/');
         } catch (error) {
             let errorMessage = 'Não foi possível criar sua conta. Verifique sua conexão e tente novamente.';
-
-            if (isAxiosError(error) && error.response) errorMessage = error.response.data.message || errorMessage;
-            else console.error('Erro inesperado no registro:', error);
-
+            if (isAxiosError(error) && error.response) {
+                errorMessage = error.response.data.message || errorMessage;
+            }
             Alert.alert('Atenção!', errorMessage);
         } finally {
             setLoading(false);
         }
     }
 
-    function handleNavigateToLogin() {
-        router.replace('/');
-    }
+    const handleNavigateToLogin = () => router.replace('/');
 
     return (
         <View style={styles.container}>
@@ -90,12 +100,15 @@ export default function RegisterScreen() {
                     <TextInput
                         placeholder='Senha'
                         placeholderTextColor='gray'
-                        secureTextEntry
+                        secureTextEntry={!isPasswordVisible}
                         style={styles.input}
                         value={password}
                         onChangeText={setPassword}
                         textContentType='newPassword'
                     />
+                    <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+                        <MaterialIcons name={isPasswordVisible ? 'visibility' : 'visibility-off'} size={24} color="gray" />
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.inputGroup}>
@@ -103,12 +116,15 @@ export default function RegisterScreen() {
                     <TextInput
                         placeholder='Confirmar senha'
                         placeholderTextColor='gray'
-                        secureTextEntry
+                        secureTextEntry={!isConfirmPasswordVisible}
                         style={styles.input}
                         value={confirmPassword}
                         onChangeText={setConfirmPassword}
                         textContentType='newPassword'
                     />
+                    <TouchableOpacity onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}>
+                        <MaterialIcons name={isConfirmPasswordVisible ? 'visibility' : 'visibility-off'} size={24} color="gray" />
+                    </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity style={styles.registerButton} onPress={handleRegister} disabled={loading}>
@@ -139,7 +155,7 @@ const styles = StyleSheet.create({
     },
     formArea: {
         flex: 1,
-        backgroundColor: "black",
+        backgroundColor: Colors.black,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 30,
@@ -171,7 +187,7 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 1,
-        color: 'gray',
+        color: Colors.gray,
         fontSize: 16,
         paddingVertical: 10,
     },

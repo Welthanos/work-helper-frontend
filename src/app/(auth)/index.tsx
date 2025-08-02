@@ -1,10 +1,10 @@
 import { Colors } from '@/src/constants/Colors';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { isAxiosError } from 'axios';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
-import { isAxiosError } from 'axios';
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -12,9 +12,16 @@ export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-    async function handleLogin() {
+    const handleLogin = async () => {
         if (loading) return;
+
+        if (!email.trim() || !password) {
+            Alert.alert('Atenção!', 'E-mail e senha são obrigatórios.');
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -22,8 +29,11 @@ export default function LoginScreen() {
         } catch (error) {
             let errorMessage = 'Não foi possível fazer o login. Verifique sua conexão e tente novamente.';
 
-            if (isAxiosError(error) && error.response) errorMessage = error.response.data.message || errorMessage;
-            else console.error('Atenção!', error);
+            if (isAxiosError(error) && error.response) {
+                errorMessage = error.response.data.message || errorMessage;
+            } else {
+                console.error('Atenção!', error);
+            }
 
             Alert.alert('Atenção!', errorMessage);
         } finally {
@@ -31,9 +41,7 @@ export default function LoginScreen() {
         }
     }
 
-    function handleNavigateToRegister() {
-        router.replace('/register');
-    }
+    const handleNavigateToRegister = () => router.replace('/register');
 
     return (
         <View style={styles.container}>
@@ -45,10 +53,10 @@ export default function LoginScreen() {
                 </View>
 
                 <View style={styles.inputGroup}>
-                    <MaterialIcons name='email' size={20} color='gray' style={styles.iconLeft} />
+                    <MaterialIcons name='email' size={20} color={Colors.gray} style={styles.iconLeft} />
                     <TextInput
                         placeholder='E-mail'
-                        placeholderTextColor='gray'
+                        placeholderTextColor={Colors.gray}
                         style={styles.input}
                         value={email}
                         onChangeText={setEmail}
@@ -59,16 +67,19 @@ export default function LoginScreen() {
                 </View>
 
                 <View style={styles.inputGroup}>
-                    <MaterialIcons name='lock' size={20} color='gray' style={styles.iconLeft} />
+                    <MaterialIcons name='lock' size={20} color={Colors.gray} style={styles.iconLeft} />
                     <TextInput
                         placeholder='Senha'
-                        placeholderTextColor='gray'
-                        secureTextEntry
+                        placeholderTextColor={Colors.gray}
+                        secureTextEntry={!isPasswordVisible}
                         style={styles.input}
                         value={password}
                         onChangeText={setPassword}
                         textContentType='password'
                     />
+                    <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+                        <MaterialIcons name={isPasswordVisible ? 'visibility' : 'visibility-off'} size={24} color={Colors.gray} />
+                    </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity style={styles.loginButton} onPress={handleLogin} disabled={loading}>
@@ -99,7 +110,7 @@ const styles = StyleSheet.create({
     },
     formArea: {
         flex: 1,
-        backgroundColor: "black",
+        backgroundColor: Colors.black,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 30,
