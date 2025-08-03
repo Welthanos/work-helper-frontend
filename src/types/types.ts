@@ -2,8 +2,9 @@ import { ImageSourcePropType, KeyboardTypeOptions } from 'react-native';
 
 export type Modality = {
     id: string;
-    title: string;
+    name: string;
     image: ImageSourcePropType;
+    active: boolean;
 }
 
 export type Survey = {
@@ -36,10 +37,16 @@ export type Assessment = {
     worker_cpf: string;
     worker_name: string;
     worker_sex: string;
+    recommendations?: Recommendation[];
 }
 
 export type AssessmentField = {
     name: keyof Omit<Assessment, 'id' | 'user_id' | 'worker_id' | 'survey_id' | 'worker_name' | 'assessment_date' | 'cpf' | 'sex' | 'modality'>;
     label: string;
     keyboard: KeyboardTypeOptions;
+}
+
+export interface Recommendation {
+    recommendation_code: string;
+    description: string;
 }
