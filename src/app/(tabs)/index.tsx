@@ -1,15 +1,16 @@
-import ModalityCard from '@/src/components/ModalityCard';
-import { Colors } from '@/src/constants/Colors';
-import { modalities, sliderTexts } from '@/src/constants/Datas';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Colors } from '@/src/constants/Colors';
+import { modalities, sliderTexts } from '@/src/constants/Datas';
+import ModalityCard from '@/src/components/ModalityCard';
 
 export default function HomeScreen() {
     const router = useRouter();
     const [currentSlide, setCurrentSlide] = useState(0);
+
     const handleNextSlide = () => setCurrentSlide((prev) => (prev + 1) % sliderTexts.length);
     const handlePrevSlide = () => setCurrentSlide((prev) => (prev - 1 + sliderTexts.length) % sliderTexts.length);
     const handleNavigateToSurvey = () => router.push('/survey');
@@ -19,18 +20,26 @@ export default function HomeScreen() {
             <View style={styles.headerCard}>
                 <Image source={require('@/src/assets/images/robot-looking.gif')} style={styles.robotImage} contentFit='contain' />
 
-                <View style={styles.carouselWrapper}>
-                    <TouchableOpacity onPress={handlePrevSlide}>
-                        <MaterialIcons name='chevron-left' size={30} color={Colors.deepCyan} />
-                    </TouchableOpacity>
-
+                <View style={styles.carouselContainer}>
                     <View style={styles.carouselBackground}>
                         <Text style={styles.carouselText}>{sliderTexts[currentSlide]}</Text>
                     </View>
 
-                    <TouchableOpacity onPress={handleNextSlide}>
-                        <MaterialIcons name='chevron-right' size={30} color={Colors.deepCyan} />
-                    </TouchableOpacity>
+                    <View style={styles.carouselControls}>
+                        <TouchableOpacity onPress={handlePrevSlide} style={styles.arrowButton}>
+                            <MaterialIcons name='chevron-left' size={20} color={Colors.white} />
+                        </TouchableOpacity>
+
+                        <View style={styles.dotsContainer}>
+                            {sliderTexts.map((_, index) => (
+                                <View key={index} style={[styles.dot, currentSlide === index && styles.dotActive]} />
+                            ))}
+                        </View>
+
+                        <TouchableOpacity onPress={handleNextSlide} style={styles.arrowButton}>
+                            <MaterialIcons name='chevron-right' size={20} color={Colors.white} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
 
@@ -61,57 +70,84 @@ const styles = StyleSheet.create({
     headerCard: {
         flexDirection: 'row',
         backgroundColor: Colors.white,
+        height: '40%',
         borderBottomRightRadius: 50,
         borderBottomLeftRadius: 50,
         alignItems: 'center',
         justifyContent: 'center',
-        height: '40%',
-        paddingHorizontal: 8
+        paddingHorizontal: 8,
+        gap: 5
     },
     robotImage: {
-        width: 180,
-        height: 180
+        width: 150,
+        height: 150,
     },
-    carouselWrapper: {
+    carouselContainer: {
         flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'center',
-        gap: 2
+        marginRight: 10,
     },
     carouselBackground: {
         backgroundColor: Colors.cyan,
-        borderTopLeftRadius: 20,
-        borderBottomRightRadius: 20,
-        paddingVertical: 15,
-        paddingHorizontal: 10,
-        flexShrink: 1,
+        borderRadius: 5,
+        borderBottomRightRadius: 15,
+        borderTopLeftRadius: 15,
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+        minHeight: 110,
+        borderWidth: 3,
+        borderColor: Colors.lightCyan,
     },
     carouselText: {
         color: Colors.white,
-        fontSize: 16,
-        textAlign: 'left',
-        lineHeight: 19,
+        fontSize: 15,
+        textAlign: 'justify',
+        lineHeight: 20,
+        fontWeight: '500',
+    },
+    carouselControls: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        marginTop: 10,
+        paddingHorizontal: 5
+    },
+    arrowButton: {
+        backgroundColor: Colors.darkBlue,
+        borderRadius: 20,
+    },
+    dotsContainer: {
+        flexDirection: 'row',
+        gap: 8,
+    },
+    dot: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: Colors.deepWhite,
+    },
+    dotActive: {
+        backgroundColor: Colors.darkBlue,
     },
     modalitiesSection: {
-        marginTop: 40,
-        backgroundColor: Colors.cyan,
+        paddingTop: 30,
         flex: 1,
     },
     sectionHeader: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 8,
-        paddingHorizontal: 18,
-        marginBottom: 22,
+        gap: 10,
+        paddingHorizontal: 20,
+        marginBottom: 20,
     },
     sectionText: {
-        fontSize: 21,
+        fontSize: 22,
         fontWeight: 'bold',
         color: Colors.white,
     },
     cardList: {
         gap: 15,
-        paddingHorizontal: 18
+        paddingHorizontal: 20,
+        paddingBottom: 20,
     }
 });
