@@ -1,7 +1,7 @@
 import RecommendationCard from '@/src/components/RecommendationCard';
 import { Colors } from '@/src/constants/Colors';
 import { useAssessments } from '@/src/hooks/useAssessments';
-import { formatDate } from '@/src/utils/date';
+import { formatDate } from '@/src/utils/dates';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';

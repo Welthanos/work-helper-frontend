@@ -5,8 +5,8 @@ import { Alert } from 'react-native';
 
 import api from '../services/api';
 import { Assessment } from '../types/types';
-import { unmaskCpf } from '../utils/cpf';
-import { formatApiDateToMask, unmaskDate } from '../utils/date';
+import { unmaskCpf } from '../utils/cpfs';
+import { formatApiDateToMask, unmaskDate } from '../utils/dates';
 
 const initialFormState = {
     worker_name: '',

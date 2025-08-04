@@ -3,7 +3,7 @@ import { Assessment } from '@/src/types/types';
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, LayoutAnimation, UIManager, Platform, GestureResponderEvent } from 'react-native';
-import { formatDate } from '../utils/date';
+import { formatDate } from '../utils/dates';
 
 type AssessmentCardProps = {
     assessment: Assessment;

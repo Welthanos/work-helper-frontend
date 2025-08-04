@@ -1,11 +1,16 @@
+import * as NavigationBar from 'expo-navigation-bar';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
+import { Colors } from '../constants/Colors';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 
 function InitialLayout() {
    const { token, loading } = useAuth();
    const router = useRouter();
    const segments = useSegments();
+
+   NavigationBar.setBackgroundColorAsync(Colors.white);
+   NavigationBar.setButtonStyleAsync('dark');
 
    useEffect(() => {
       if (loading) return;

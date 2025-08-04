@@ -1,7 +1,7 @@
 import { Colors } from '@/src/constants/Colors';
 import { useAssessments } from '@/src/hooks/useAssessments';
-import { maskCpf } from '@/src/utils/cpf';
-import { maskDate } from '@/src/utils/date';
+import { maskCpf } from '@/src/utils/cpfs';
+import { maskDate } from '@/src/utils/dates';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
