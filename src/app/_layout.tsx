@@ -9,7 +9,6 @@ function InitialLayout() {
    const router = useRouter();
    const segments = useSegments();
 
-   NavigationBar.setBackgroundColorAsync(Colors.white);
    NavigationBar.setButtonStyleAsync('dark');
 
    useEffect(() => {

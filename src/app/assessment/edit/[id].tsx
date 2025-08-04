@@ -18,6 +18,8 @@ export default function AssessmentEditScreen() {
         if (field === 'worker_sex') setSexDropdownOpen(false);
     }
 
+    console.log(formState.worker_cpf);
+
     if (formLoading && isEditing) return <View style={styles.loadingContainer}><ActivityIndicator size='large' color={Colors.darkBlue} /></View>
 
     return (

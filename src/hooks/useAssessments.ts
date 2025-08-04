@@ -128,7 +128,6 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
                 const assessmentId = response.data.id;
                 Alert.alert('Sucesso!', 'A nova avaliação foi criada.');
                 router.replace(`/assessment/${assessmentId}/recommendations`);
-                console.log(response.data.id)
             }
         } catch (error) {
             let errorMessage = `Não foi possível ${assessmentId ? 'atualizar' : 'criar'} a avaliação.`;
