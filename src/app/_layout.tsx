@@ -1,7 +1,6 @@
 import { Stack, useRouter, useSegments } from 'expo-router';
-import { AuthProvider, useAuth } from '../context/AuthContext';
 import { useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { AuthProvider, useAuth } from '../context/AuthContext';
 
 function InitialLayout() {
    const { token, loading } = useAuth();
@@ -22,13 +21,16 @@ function InitialLayout() {
          <Stack.Screen name='(auth)' options={{ headerShown: false }} />
          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
 
-         <Stack.Screen name='survey/[id]' options={{ headerShown: true, title: 'Pesquisas' }} />
+         <Stack.Screen name='survey/index' options={{ headerShown: true, title: 'Pesquisas' }} />
          <Stack.Screen name='survey/create' options={{ headerShown: true, title: 'Criar Pesquisa' }} />
          <Stack.Screen name='survey/edit/[id]' options={{ headerShown: true, title: 'Editar Pesquisa' }} />
 
-         <Stack.Screen name='assessment/[id]' options={{ headerShown: true, title: 'Avaliações' }} />
+         <Stack.Screen name='assessment/[id]/index' options={{ headerShown: true, title: 'Avaliações' }} />
          <Stack.Screen name='assessment/create' options={{ headerShown: true, title: 'Criar Avaliação' }} />
          <Stack.Screen name='assessment/edit/[id]' options={{ headerShown: true, title: 'Editar Avaliação' }} />
+         <Stack.Screen name='assessment/[id]/recommendations' options={{ headerShown: true, title: 'Recomendações' }} />
+
+         <Stack.Screen name='about' options={{ headerShown: true, title: 'Sobre' }} />
       </Stack>
    );
 }

@@ -31,6 +31,7 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
     const router = useRouter();
 
     const [assessments, setAssessments] = useState<Assessment[]>([]);
+    const [assessment, setAssessment] = useState<Assessment | null>(null);
     const [listLoading, setListLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
@@ -58,11 +59,8 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
             const response = await api.get(`/assessments/${id}`);
             const assessmentData = response.data;
 
-            setFormState({
-                ...assessmentData,
-                assessment_date: formatApiDateToMask(assessmentData.assessment_date),
-            });
-
+            setAssessment(assessmentData);
+            setFormState({ ...assessmentData, assessment_date: formatApiDateToMask(assessmentData.assessment_date) });
         } catch (error) {
             Alert.alert('Erro', 'Não foi possível carregar os dados da avaliação.');
             router.back();
@@ -124,11 +122,14 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
             if (assessmentId) {
                 await api.put(`/assessments/${assessmentId}`, payload);
                 Alert.alert('Sucesso!', 'A avaliação foi atualizada.');
+                router.back();
             } else {
-                await api.post('/assessments', payload);
+                const response = await api.post('/assessments', payload);
+                const assessmentId = response.data.id;
                 Alert.alert('Sucesso!', 'A nova avaliação foi criada.');
+                router.replace(`/assessment/${assessmentId}/recommendations`);
+                console.log(response.data.id)
             }
-            router.back();
         } catch (error) {
             let errorMessage = `Não foi possível ${assessmentId ? 'atualizar' : 'criar'} a avaliação.`;
             if (isAxiosError(error) && error.response) {
@@ -155,7 +156,7 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
 
     const handleNavigateToRecommendations = (id: string) => {
         setOpenPopoverId(null);
-        router.push('/');
+        router.push(`/assessment/${id}/recommendations`);
     }
 
     const handleEdit = (id: string) => {
@@ -188,7 +189,7 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
     }
 
     return {
-        assessments, listLoading, isRefreshing, openPopoverId,
+        assessments, assessment, listLoading, isRefreshing, openPopoverId,
         handleRefresh, handleToggleDate, handleNavigateToAssessmentCreate,
         handleNavigateToRecommendations, handleEdit, handleDelete,
         closePopover: () => setOpenPopoverId(null),

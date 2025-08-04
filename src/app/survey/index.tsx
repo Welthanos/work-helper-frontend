@@ -8,25 +8,13 @@ import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import { useSurveys } from '../../hooks/useSurveys';
 
 export default function SurveyScreen() {
-    const { id } = useLocalSearchParams();
-    const {
-        surveys,
-        listLoading,
-        isRefreshing,
-        openPopoverId,
-        handleRefresh,
-        handleToggleDates,
-        handleNavigateToSurveyCreate,
-        handleNavigateToAssessments,
-        handleEdit,
-        handleDelete
-    } = useSurveys();
+    const { surveys, listLoading, isRefreshing, openPopoverId, handleRefresh, handleToggleDates, handleNavigateToSurveyCreate, handleNavigateToAssessments, handleEdit, handleDelete } = useSurveys();
 
     if (listLoading) return <View style={styles.loadingContainer}><ActivityIndicator size='large' color={Colors.darkBlue} /></View>
 
     return (
         <View style={styles.container}>
-            {surveys && surveys.length > 0 && id == '1' ? (
+            {surveys && surveys.length ? (
                 <FlatList
                     data={surveys}
                     renderItem={({ item }) => (
