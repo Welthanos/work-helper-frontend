@@ -46,7 +46,15 @@ export type AssessmentField = {
     keyboard: KeyboardTypeOptions;
 }
 
-export interface Recommendation {
+export type Recommendation = {
     recommendation_code: string;
     description: string;
 }
+
+export type RiskLevel = 'Baixo' | 'Moderado' | 'Alto' | 'Crítico';
+
+export type RiskDistributionItem = {
+    risk_level: RiskLevel;
+    count: string;
+}
+

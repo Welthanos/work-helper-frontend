@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 8,
-        gap: 5
     },
     robotImage: {
         width: 150,
@@ -101,7 +100,7 @@ const styles = StyleSheet.create({
     carouselText: {
         color: Colors.white,
         fontSize: 15,
-        textAlign: 'justify',
+        textAlign: 'left',
         lineHeight: 20,
         fontWeight: '500',
     },

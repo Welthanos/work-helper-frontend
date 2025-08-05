@@ -1,19 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ScrollView, StyleSheet, Text, View, ActivityIndicator, Dimensions, Alert, TouchableOpacity } from 'react-native';
-import { BarChart, PieChart } from 'react-native-chart-kit';
-import { useFocusEffect } from 'expo-router';
-import { Picker } from '@react-native-picker/picker';
 import { Colors } from '@/src/constants/Colors';
 import api from '@/src/services/api';
-import Modal from 'react-native-modal';
+import { RiskDistributionItem, RiskLevel } from '@/src/types/types';
 import { MaterialIcons } from '@expo/vector-icons';
-
-type RiskLevel = 'Baixo' | 'Moderado' | 'Alto' | 'Crítico';
-
-interface RiskDistributionItem {
-    risk_level: RiskLevel;
-    count: string;
-}
+import { useFocusEffect } from '@react-navigation/native'; // ✅ Import correto
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BarChart, PieChart } from 'react-native-chart-kit';
+import Modal from 'react-native-modal';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -25,14 +18,14 @@ const chartConfig = {
     barPercentage: 0.8,
     useShadowColorFromDataset: false,
     decimalPlaces: 0,
-};
+}
 
 const pieChartColors: Record<RiskLevel, string> = {
     'Baixo': Colors.green,
     'Moderado': Colors.yellow,
     'Alto': Colors.orange,
     'Crítico': Colors.red,
-};
+}
 
 export default function ReportsScreen() {
     const [surveys, setSurveys] = useState<any[]>([]);
@@ -41,42 +34,29 @@ export default function ReportsScreen() {
     const [loading, setLoading] = useState(true);
     const [isPickerVisible, setPickerVisible] = useState(false);
 
-    const selectedSurveyLabel = surveys.find(s => s.id === selectedSurveyId)?.title || 'Nenhuma pesquisa selecionada';
+    const selectedSurveyLabel = surveys.find(s => s.id === selectedSurveyId)?.title || 'Selecionar Pesquisa...';
 
     useFocusEffect(
         useCallback(() => {
             const fetchSurveys = async () => {
                 setLoading(true);
+                setSelectedSurveyId(null);
+                setReportData(null);
                 try {
                     const response = await api.get('/surveys');
                     setSurveys(response.data);
-                    if (response.data.length > 0) {
-                        const currentSelectedExists = response.data.some((s: any) => s.id === selectedSurveyId);
-                        if (!selectedSurveyId || !currentSelectedExists) {
-                            setSelectedSurveyId(response.data[0].id);
-                        } else {
-                            setLoading(false);
-                        }
-                    } else {
-                        setSelectedSurveyId(null);
-                        setReportData(null);
-                        setLoading(false);
-                    }
                 } catch (error) {
                     Alert.alert('Erro', 'Não foi possível carregar a lista de pesquisas.');
+                } finally {
                     setLoading(false);
                 }
-            };
+            }
             fetchSurveys();
-        }, [selectedSurveyId])
+        }, [])
     );
 
     useEffect(() => {
-        if (!selectedSurveyId) {
-            setReportData(null);
-            if (surveys.length === 0) setLoading(false);
-            return;
-        };
+        if (!selectedSurveyId) return;
         const fetchReportData = async () => {
             setLoading(true);
             setReportData(null);
@@ -95,17 +75,15 @@ export default function ReportsScreen() {
     const pieChartData = reportData?.riskDistribution.map((item: RiskDistributionItem) => ({
         name: item.risk_level,
         population: parseInt(item.count, 10),
-        color: pieChartColors[item.risk_level] || '#888',
+        color: pieChartColors[item.risk_level],
         legendFontColor: Colors.blueGray,
         legendFontSize: 14,
     })) || [];
 
     const barChartData = {
         labels: reportData?.topRecommendations.map((_: any, index: number) => `#${index + 1}`) || [],
-        datasets: [{
-            data: reportData?.topRecommendations.map((item: any) => parseInt(item.frequency, 10)) || []
-        }]
-    };
+        datasets: [{ data: reportData?.topRecommendations.map((item: any) => parseInt(item.frequency, 10)) || [] }]
+    }
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -113,9 +91,12 @@ export default function ReportsScreen() {
                 isVisible={isPickerVisible}
                 onBackdropPress={() => setPickerVisible(false)}
                 style={styles.modal}
+                animationIn='fadeIn'
+                animationOut='fadeOut'
+                backdropOpacity={0.4}
             >
                 <View style={styles.modalContent}>
-                    <Text style={styles.modalTitle}>Selecione uma Pesquisa</Text>
+                    <Text style={styles.modalTitle}>Pesquisas</Text>
                     <ScrollView>
                         {surveys.map((survey: any) => (
                             <TouchableOpacity
@@ -134,14 +115,13 @@ export default function ReportsScreen() {
             </Modal>
 
             <View style={styles.card}>
-                <Text style={styles.sectionTitle}>Pesquisa Selecionada</Text>
                 <TouchableOpacity style={styles.pickerButton} onPress={() => setPickerVisible(true)}>
                     <Text style={styles.pickerButtonText} numberOfLines={1}>{selectedSurveyLabel}</Text>
-                    <MaterialIcons name="arrow-drop-down" size={24} color={Colors.darkBlue} />
+                    <MaterialIcons name='arrow-drop-down' size={24} color={Colors.darkBlue} />
                 </TouchableOpacity>
             </View>
 
-            {loading && <ActivityIndicator size="large" color={Colors.darkBlue} style={{ marginTop: 40 }} />}
+            {loading && <ActivityIndicator size='large' color={Colors.darkBlue} style={{ marginTop: 40 }} />}
 
             {!loading && reportData && (
                 <>
@@ -166,7 +146,16 @@ export default function ReportsScreen() {
                     <View style={styles.card}>
                         <Text style={styles.sectionTitle}>Distribuição de Risco</Text>
                         {pieChartData.length > 0 ? (
-                            <PieChart data={pieChartData} width={screenWidth - 60} height={220} chartConfig={chartConfig} accessor={"population"} backgroundColor={"transparent"} paddingLeft={"15"} absolute />
+                            <PieChart
+                                data={pieChartData}
+                                width={screenWidth - 60}
+                                height={220}
+                                chartConfig={chartConfig}
+                                accessor={'population'}
+                                backgroundColor={'transparent'}
+                                paddingLeft={'15'}
+                                absolute
+                            />
                         ) : <Text style={styles.noDataText}>Sem dados de distribuição.</Text>}
                     </View>
 
@@ -174,7 +163,16 @@ export default function ReportsScreen() {
                         <Text style={styles.sectionTitle}>Principais Fatores de Risco</Text>
                         {barChartData.datasets[0].data.length > 0 ? (
                             <>
-                                <BarChart data={barChartData} width={screenWidth - 60} height={220} chartConfig={chartConfig} yAxisLabel="" yAxisSuffix="" fromZero showValuesOnTopOfBars />
+                                <BarChart
+                                    data={barChartData}
+                                    width={screenWidth - 60}
+                                    height={220}
+                                    chartConfig={chartConfig}
+                                    yAxisLabel=''
+                                    yAxisSuffix=''
+                                    fromZero
+                                    showValuesOnTopOfBars
+                                />
                                 <View style={styles.legendContainer}>
                                     {reportData.topRecommendations.map((item: any, index: number) => (
                                         <View key={index} style={styles.legendItem}>
@@ -188,12 +186,6 @@ export default function ReportsScreen() {
                     </View>
                 </>
             )}
-
-            {!loading && !selectedSurveyId && (
-                <View style={styles.card}>
-                    <Text style={styles.noDataText}>Crie ou selecione uma pesquisa para ver os relatórios.</Text>
-                </View>
-            )}
         </ScrollView>
     );
 }
@@ -201,23 +193,19 @@ export default function ReportsScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f8f9fa'
+        backgroundColor: Colors.altWhite,
     },
     contentContainer: {
         paddingVertical: 15,
-        paddingBottom: 40,
+        paddingBottom: 10
     },
     card: {
         backgroundColor: Colors.white,
-        borderRadius: 12,
+        borderRadius: 10,
         padding: 20,
         marginHorizontal: 15,
         marginBottom: 20,
         elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
     },
     pickerButton: {
         flexDirection: 'row',
@@ -225,25 +213,27 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         height: 50,
         borderWidth: 1,
-        borderColor: '#dee2e6',
+        borderColor: Colors.deepWhite,
         borderRadius: 8,
         paddingHorizontal: 15,
-        backgroundColor: '#f8f9fa',
+        backgroundColor: Colors.altWhite,
     },
     pickerButtonText: {
         fontSize: 16,
         color: Colors.darkBlue,
         flex: 1,
+        fontWeight: '400'
     },
     modal: {
         justifyContent: 'center',
-        margin: 0,
+        alignItems: 'center',
+        margin: 0
     },
     modalContent: {
         backgroundColor: Colors.white,
         borderRadius: 12,
-        marginHorizontal: '10%',
-        maxHeight: '60%',
+        width: '85%',
+        maxHeight: '70%',
         padding: 20,
     },
     modalTitle: {
@@ -254,14 +244,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     modalOption: {
-        paddingVertical: 15,
+        padding: 15,
         borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0',
+        backgroundColor: Colors.white,
+        borderColor: Colors.deepWhite,
     },
     modalOptionText: {
         fontSize: 16,
         color: Colors.darkBlue,
-        textAlign: 'center',
+        textAlign: 'left'
     },
     sectionTitle: {
         fontSize: 20,
@@ -285,19 +276,19 @@ const styles = StyleSheet.create({
     },
     statLabel: {
         fontSize: 14,
-        color: Colors.blueGray,
+        color: Colors.darkBlue,
         marginTop: 4
     },
     noDataText: {
         textAlign: 'center',
-        color: Colors.blueGray,
+        color: Colors.darkBlue,
         paddingVertical: 20
     },
     legendContainer: {
         marginTop: 20,
         paddingTop: 15,
         borderTopWidth: 1,
-        borderTopColor: '#f0f0f0'
+        borderTopColor: Colors.darkBlue
     },
     legendItem: {
         flexDirection: 'row',
