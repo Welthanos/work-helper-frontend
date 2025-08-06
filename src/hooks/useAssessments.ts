@@ -88,10 +88,32 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
 
     const saveAssessment = async () => {
         if (formLoading) return;
-        if (!formState.worker_name?.trim() || !formState.worker_cpf || !formState.assessment_date) {
-            Alert.alert('Atenção!', 'Preencha os dados do trabalhador e a data da avaliação.');
-            return;
+
+        const validationSchema = {
+            worker_name: 'O nome do trabalhador deve ser preenchido.',
+            worker_cpf: 'O CPF do trabalhador deve ser preenchido.',
+            worker_age: 'A idade do trabalhador deve ser preenchida.',
+            worker_weight_kg: 'O peso do trabalhador deve ser preenchido.',
+            worker_height_m: 'A altura do trabalhador deve ser preenchida.',
+            service_time_years: 'O tempo de serviço deve ser preenchido.',
+            work_shift_hours: 'A jornada de trabalho deve ser preenchida.',
+            load_unitization_n: 'A unitização da carga deve ser preenchida.',
+            load_weight_kg: 'O peso da carga deve ser preenchido.',
+            distance_traveled_m: 'A distância percorrida deve ser preenchida.',
+            lifting_frequency_per_min: 'A frequência de levantamento deve ser preenchida.',
+            trunk_flexion_angle: 'O ângulo de flexão do tronco deve ser preenchido.',
+            trunk_rotation_angle: 'O ângulo de rotação do tronco deve ser preenchido.',
+            assessment_date: 'A data da avaliação deve ser preenchida.',
         }
+
+        for (const [field, label] of Object.entries(validationSchema)) {
+            const value = formState[field as keyof typeof formState];
+            if (!value || String(value).trim() === '') {
+                Alert.alert('Campo Obrigatório', `${label}`);
+                return;
+            }
+        }
+
         setFormLoading(true);
 
         const payload = {
@@ -125,14 +147,14 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
                 router.back();
             } else {
                 const response = await api.post('/assessments', payload);
-                const assessmentId = response.data.id;
+                const newAssessmentId = response.data.id;
                 Alert.alert('Sucesso!', 'A nova avaliação foi criada.');
-                router.replace(`/assessment/${assessmentId}/recommendations`);
+                router.replace(`/assessment/${newAssessmentId}/recommendations`);
             }
         } catch (error) {
             let errorMessage = `Não foi possível ${assessmentId ? 'atualizar' : 'criar'} a avaliação.`;
-            if (isAxiosError(error) && error.response) {
-                errorMessage = error.response.data.message || errorMessage;
+            if (isAxiosError(error) && error.response?.data?.message) {
+                errorMessage = error.response.data.message;
             }
             Alert.alert('Erro', errorMessage);
         } finally {
@@ -165,7 +187,7 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
 
     const handleDelete = (id: string) => {
         setOpenPopoverId(null);
-        Alert.alert('Confirmar exclusão?', 'Tem certeza que deseja excluir esta pesquisa?',
+        Alert.alert('Confirmar exclusão?', 'Tem certeza que deseja excluir esta avaliação?',
             [
                 { text: 'Cancelar', style: 'cancel' },
                 {
@@ -173,7 +195,7 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
                     onPress: async () => {
                         try {
                             await api.delete(`/assessments/${id}`);
-                            setAssessments(current => current.filter(a => a.id !== id));
+                            setAssessments(current => current.filter(a => String(a.id) !== id));
                         } catch (error) {
                             Alert.alert('Erro', 'Não foi possível excluir a avaliação.');
                         }
