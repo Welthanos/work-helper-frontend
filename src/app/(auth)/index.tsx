@@ -29,11 +29,7 @@ export default function LoginScreen() {
         } catch (error) {
             let errorMessage = 'Não foi possível fazer o login. Verifique sua conexão e tente novamente.';
 
-            if (isAxiosError(error) && error.response) {
-                errorMessage = error.response.data.message || errorMessage;
-            } else {
-                console.error('Atenção!', error);
-            }
+            if (isAxiosError(error) && error.response) errorMessage = error.response.data.message || errorMessage;
 
             Alert.alert('Atenção!', errorMessage);
         } finally {

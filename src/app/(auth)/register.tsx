@@ -48,9 +48,8 @@ export default function RegisterScreen() {
             router.replace('/');
         } catch (error) {
             let errorMessage = 'Não foi possível criar sua conta. Verifique sua conexão e tente novamente.';
-            if (isAxiosError(error) && error.response) {
-                errorMessage = error.response.data.message || errorMessage;
-            }
+            if (isAxiosError(error) && error.response) errorMessage = error.response.data.message || errorMessage;
+
             Alert.alert('Atenção!', errorMessage);
         } finally {
             setLoading(false);
