@@ -156,7 +156,7 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
             if (isAxiosError(error) && error.response?.data?.message) {
                 errorMessage = error.response.data.message;
             }
-            Alert.alert('Erro', errorMessage);
+            Alert.alert('Atenção!', errorMessage);
         } finally {
             setFormLoading(false);
         }
@@ -191,7 +191,7 @@ export function useAssessments(surveyId: string, assessmentId?: string) {
             [
                 { text: 'Cancelar', style: 'cancel' },
                 {
-                    text: 'Deletar', style: 'destructive',
+                    text: 'Excluir', style: 'destructive',
                     onPress: async () => {
                         try {
                             await api.delete(`/assessments/${id}`);

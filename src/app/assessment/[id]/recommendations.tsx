@@ -13,12 +13,11 @@ export default function RecommendationScreen() {
 
     if (formLoading || !assessment) return (<View style={styles.loadingContainer}><ActivityIndicator size='large' color={Colors.darkBlue} /></View>);
 
-    const riskLevel = Number(assessment.calculated_risk);
-    let riskColor = Colors.green
+    const riskLevel = assessment.calculated_risk;
+    let riskColor = Colors.green;
 
-    if (riskLevel > 75) riskColor = Colors.red
-    else if (riskLevel > 50) riskColor = Colors.orange;
-    else if (riskLevel > 25) riskColor = Colors.yellow;
+    if (riskLevel > 60) riskColor = Colors.red;
+    else if (riskLevel > 30) riskColor = Colors.yellow;
 
     return (
         <ScrollView style={styles.container}>

@@ -51,7 +51,7 @@ export type Recommendation = {
     description: string;
 }
 
-export type RiskLevel = 'Baixo' | 'Moderado' | 'Alto' | 'Crítico';
+export type RiskLevel = 'Baixo' | 'Moderado' | 'Alto';
 
 export type RiskDistributionItem = {
     risk_level: RiskLevel;

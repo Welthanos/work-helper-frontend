@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ScrollView, StyleSheet, Text, View, ActivityIndicator, Dimensions, Alert, TouchableOpacity, Pressable } from 'react-native';
-import { Image } from 'expo-image';
 import { BarChart, PieChart } from 'react-native-chart-kit';
 import { useFocusEffect } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -8,6 +7,7 @@ import Modal from 'react-native-modal';
 import { Colors } from '@/src/constants/Colors';
 import api from '@/src/services/api';
 import { RiskDistributionItem, RiskLevel } from '@/src/types/types';
+import { Image } from 'expo-image';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -23,8 +23,7 @@ const chartConfig = {
 const pieChartColors: Record<RiskLevel, string> = {
     'Baixo': Colors.green,
     'Moderado': Colors.yellow,
-    'Alto': Colors.orange,
-    'Crítico': Colors.red,
+    'Alto': Colors.red,
 }
 
 export default function ReportsScreen() {
@@ -64,11 +63,11 @@ export default function ReportsScreen() {
                 const response = await api.get(`/reports/${selectedSurveyId}`);
                 setReportData(response.data);
             } catch {
-                Alert.alert('Erro de Relatório', 'Não foi possível carregar os dados para esta pesquisa.');
+                Alert.alert('Erro de relatório', 'Não foi possível carregar os dados para esta pesquisa.');
             } finally {
                 setLoading(false);
             }
-        }
+        };
         fetchReportData();
     }, [selectedSurveyId]);
 
@@ -99,7 +98,6 @@ export default function ReportsScreen() {
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>Pesquisas</Text>
                     </View>
-
                     <ScrollView style={styles.modalList}>
                         {surveys.map((survey: any) => (
                             <Pressable
@@ -131,6 +129,9 @@ export default function ReportsScreen() {
             {!loading && !reportData && (
                 <View style={styles.placeholderContainer}>
                     <Image source={require('@/src/assets/images/robot-checking.gif')} style={styles.placeholderImage} contentFit='contain' />
+                    <Text style={styles.placeholderText}>
+                        {surveys.length > 0 ? 'Selecione uma pesquisa para começar.' : 'Nenhuma pesquisa encontrada. Crie uma para ver os relatórios.'}
+                    </Text>
                 </View>
             )}
 
@@ -145,7 +146,7 @@ export default function ReportsScreen() {
                                     <Text style={styles.statLabel}>Avaliações</Text>
                                 </View>
                                 <View style={styles.statBox}>
-                                    <Text style={styles.statValue}>{Number(reportData.generalStats.average_risk || 0).toFixed(1)}%</Text>
+                                    <Text style={styles.statValue}>{Number(reportData.generalStats.average_risk || 0).toFixed(2)}%</Text>
                                     <Text style={styles.statLabel}>Risco Médio</Text>
                                 </View>
                                 <View style={styles.statBox}>
@@ -323,6 +324,7 @@ const styles = StyleSheet.create({
     },
     legendItem: {
         flexDirection: 'row',
+        alignItems: 'flex-start',
         marginBottom: 10
     },
     legendLabel: {
@@ -346,7 +348,7 @@ const styles = StyleSheet.create({
         height: 200,
     },
     placeholderText: {
-        fontSize: 18,
+        fontSize: 16,
         color: Colors.blueGray,
         textAlign: 'center',
         maxWidth: '80%',

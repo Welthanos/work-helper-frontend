@@ -10,7 +10,6 @@ export const Colors = {
    blueGray: '#8581a1ff',
    darkBlue: '#2a245e',
    red: '#ca2334ff',
-   orange: '#fd7e14',
    yellow: '#ffc107',
    green: '#1aa53aff',
 }

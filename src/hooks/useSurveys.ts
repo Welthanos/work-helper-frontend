@@ -91,7 +91,7 @@ export function useSurveys(surveyId?: string) {
             if (isAxiosError(error) && error.response) {
                 errorMessage = error.response.data.message || errorMessage;
             }
-            Alert.alert('Erro', errorMessage);
+            Alert.alert('Atenção!', errorMessage);
         } finally {
             setFormLoading(false);
         }
@@ -120,13 +120,15 @@ export function useSurveys(surveyId?: string) {
             [
                 { text: 'Cancelar', style: 'cancel' },
                 {
-                    text: 'Deletar', style: 'destructive',
+                    text: 'Excluir', style: 'destructive',
                     onPress: async () => {
                         try {
                             await api.delete(`/surveys/${id}`);
                             setSurveys(current => current.filter(s => s.id !== id));
                         } catch (error) {
-                            Alert.alert('Erro', 'Não foi possível excluir a pesquisa.');
+                            let errorMessage = 'Não foi possível excluir a pesquisa.';
+                            if (isAxiosError(error) && error.response) errorMessage = error.response.data.message || errorMessage;
+                            Alert.alert('Erro', errorMessage);
                         }
                     },
                 },
