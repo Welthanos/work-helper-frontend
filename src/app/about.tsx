@@ -108,6 +108,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: Colors.blueGray,
         textAlign: 'center',
-        marginTop: 20,
+        marginBottom: 20,
     },
 });

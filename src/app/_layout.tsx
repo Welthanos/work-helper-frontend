@@ -9,8 +9,6 @@ function InitialLayout() {
    const router = useRouter();
    const segments = useSegments();
 
-   NavigationBar.setButtonStyleAsync('dark');
-
    useEffect(() => {
       if (loading) return;
       const inAuthGroup = segments[0] === '(auth)';
@@ -40,6 +38,11 @@ function InitialLayout() {
 }
 
 export default function RootLayout() {
+
+   useEffect(() => {
+      NavigationBar.setButtonStyleAsync('dark');
+   }, []);
+
    return (
       <AuthProvider>
          <InitialLayout />
